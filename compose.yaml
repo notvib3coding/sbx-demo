@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    command: sh -c "composer install --no-interaction && frankenphp php-server --listen :8000 --root public/"
+    user: "${UID:-1000}:${GID:-1000}"
+    environment:
+      COMPOSER_HOME: /tmp/composer
+      XDG_CONFIG_HOME: /tmp/caddy
+      XDG_DATA_HOME: /tmp/caddy
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app

@@ -1,16 +1,24 @@
 # sbx-demo
 
-A tiny app that prints a random cat from [The Cat API](https://thecatapi.com). It is the companion repo for the Not
-Vibe Coding video on running a coding agent with full permissions inside Docker Sandboxes.
+A small Symfony notes API that runs in Docker. It is the companion repo for the Not Vibe Coding video on running a
+coding agent with full permissions inside Docker Sandboxes.
 
 ```sh
-python3 cat.py          # a random cat image URL
-python3 cat.py --favs   # your saved favourites, needs CAT_API_KEY
+docker compose up -d
+curl localhost:8000/api/health
+curl localhost:8000/api/notes
+curl -X POST localhost:8000/api/notes \
+  -H "Authorization: Bearer $API_TOKEN" -H 'Content-Type: application/json' \
+  -d '{"text":"first note"}'
 ```
 
-Settings come from the environment (see `.env.example`):
+| Endpoint | What it does |
+|---|---|
+| `GET /api/health` | `{"status":"ok"}` |
+| `GET /api/notes` | every note |
+| `POST /api/notes` | adds a note; needs `Authorization: Bearer <API_TOKEN>` |
 
-- `CAT_API_KEY`: your Cat API key. Sent in the `x-api-key` header only.
-- `CAT_DEFAULT_LIMIT`: how many cats to print (default 1).
+Writes need `API_TOKEN`. Put it in `.env.local`, which git ignores; `.env` only declares it. Notes are kept in
+`var/notes.json`.
 
-Python 3 standard library only, no dependencies.
+Symfony 8, PHP 8.4, FrankenPHP.
